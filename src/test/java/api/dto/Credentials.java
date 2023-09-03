@@ -1,13 +1,10 @@
 package api.dto;
 
-public class Credentials {
-    public String email;
-    public String password;
-    public String domain;
+import lombok.AllArgsConstructor;
 
-    public Credentials(String email, String password, String domain) {
-        this.email = email;
-        this.password = password;
-        this.domain = domain;
-    }
+@AllArgsConstructor
+public class Credentials {
+    private String email;
+    private String password;
+    private String domain;
 }

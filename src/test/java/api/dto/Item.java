@@ -1,8 +1,17 @@
 package api.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
 public class Item {
-    public String name;
-    public double price;
-    public double price_for_quantity;
-    public String quantity_unit;
+    private String name;
+    private double price;
+    private double price_for_quantity;
+    private String quantity_unit;
 }

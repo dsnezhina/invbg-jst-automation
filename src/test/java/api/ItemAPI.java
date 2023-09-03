@@ -8,73 +8,33 @@ import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
-public class ItemAPI {
+public class ItemAPI extends Request {
 
-    private static final String BASE_URL = "https://api.inv.bg";
-    private static final String BASE_PATH = "v3";
     private static final String ENDPOINT = "/items";
-    private String token;
-    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public ItemAPI(String token) {
-        this.token = token;
-    }
-
-    public RequestSpecification baseRequest() {
-
-        return RestAssured
-                .given()
-                .log().all()
-                .auth().oauth2(token)
-                .baseUri(BASE_URL)
-                .basePath(BASE_PATH)
-                .contentType(ContentType.JSON)
-                .accept(ContentType.JSON)
-                .header("User-Agent", "UA");
+        super(token);
     }
 
     public Response createItem(Item item) {
-
-        String body = gson.toJson(item);
-
-        return baseRequest()
-                .body(body)
-                .when()
-                .post(ENDPOINT)
-                .prettyPeek();
+        String body = GSON.toJson(item);
+        return post(ENDPOINT, body);
     }
 
     public Response deleteItem(int id) {
-
-        return baseRequest()
-                .when()
-                .delete(ENDPOINT + "/" + id)
-                .prettyPeek();
+        return delete(ENDPOINT + "/" + id);
     }
 
     public Response updateItem(int id, Item item) {
-
-        String body = gson.toJson(item);
-
-        return baseRequest()
-                .body(body)
-                .when().patch(ENDPOINT + "/" + id)
-                .prettyPeek();
+        String body = GSON.toJson(item);
+        return patch(ENDPOINT + "/" + id, body);
     }
 
     public Response getItem(int id) {
-
-        return baseRequest()
-                .when()
-                .get(ENDPOINT + "/" + id)
-                .prettyPeek();
+        return get(ENDPOINT + "/" + id);
     }
 
     public Response getAllItems() {
-
-        return baseRequest()
-                .when()
-                .get(ENDPOINT)
-                .prettyPeek();
+        return get(ENDPOINT);
     }
 }

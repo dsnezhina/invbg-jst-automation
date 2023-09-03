@@ -12,21 +12,26 @@ import java.time.LocalDateTime;
 
 public class ItemAPITests {
 
+    private String token;
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+    @BeforeEach
+    public void beforeEach() {
+        //Obtain token
+        Credentials credentials = new Credentials(TestData.validUsername, TestData.validPassword, TestData.personalDomain);
+        LoginAPI loginAPI = new LoginAPI("");
+        token = loginAPI.obtainToken(credentials);
+    }
+
     @Test
     @DisplayName("Can create new item")
     @Tag("api")
     public void canCreateNewItem() {
-        //Obtain token
-        Credentials credentials = new Credentials(TestData.validUsername, TestData.validPassword, TestData.personalDomain);
-        String token = LoginAPI.obtainToken(credentials);
+
         ItemAPI itemAPI = new ItemAPI(token);
 
         //Create item
-        Item itemToCreate = new Item();
-        itemToCreate.name = TestData.itemName + LocalDateTime.now();
-        itemToCreate.price = TestData.itemPrice;
-        itemToCreate.price_for_quantity = TestData.itemPriceForQuantity;
-        itemToCreate.quantity_unit = TestData.quantityUnit;
+        Item itemToCreate = new Item(TestData.itemName + LocalDateTime.now(), TestData.itemPrice, TestData.itemPriceForQuantity, TestData.quantityUnit);
 
         //Check response status code
         Response createResponse = itemAPI.createItem(itemToCreate);
@@ -35,13 +40,13 @@ public class ItemAPITests {
         //Verify created item fields values match DTO values
         int itemId = createResponse.then().extract().jsonPath().getInt("id");
         Response getResponse = itemAPI.getItem(itemId);
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
         Item createdItem = gson.fromJson(getResponse.then().extract().body().asPrettyString(), Item.class);
 
-        Assertions.assertEquals(itemToCreate.name, createdItem.name);
-        Assertions.assertEquals(itemToCreate.price, createdItem.price);
-        Assertions.assertEquals(itemToCreate.price_for_quantity, createdItem.price_for_quantity);
-        Assertions.assertEquals(itemToCreate.quantity_unit, createdItem.quantity_unit);
+        Assertions.assertEquals(itemToCreate.getName(), createdItem.getName());
+        Assertions.assertEquals(itemToCreate.getPrice(), createdItem.getPrice());
+        Assertions.assertEquals(itemToCreate.getPrice_for_quantity(), createdItem.getPrice_for_quantity());
+        Assertions.assertEquals(itemToCreate.getQuantity_unit(), createdItem.getQuantity_unit());
 
         //TODO Compare both objects instead of field by field
 
@@ -53,9 +58,6 @@ public class ItemAPITests {
     @Tag("api")
     public void canGetAllItems() {
 
-        //Obtain token
-        Credentials credentials = new Credentials(TestData.validUsername, TestData.validPassword, TestData.personalDomain);
-        String token = LoginAPI.obtainToken(credentials);
         ItemAPI itemAPI = new ItemAPI(token);
 
         //Check response status code
@@ -68,17 +70,15 @@ public class ItemAPITests {
     @Tag("api")
     public void canGetSingleItem() {
 
-        //Obtain token
-        Credentials credentials = new Credentials(TestData.validUsername, TestData.validPassword, TestData.personalDomain);
-        String token = LoginAPI.obtainToken(credentials);
         ItemAPI itemAPI = new ItemAPI(token);
 
         //Create item
-        Item itemToCreate = new Item();
-        itemToCreate.name = TestData.itemName + LocalDateTime.now();
-        itemToCreate.price = TestData.itemPrice;
-        itemToCreate.price_for_quantity = TestData.itemPriceForQuantity;
-        itemToCreate.quantity_unit = TestData.quantityUnit;
+        Item itemToCreate = Item.builder()
+                .name(TestData.itemName + LocalDateTime.now())
+                .price(TestData.itemPrice)
+                .price_for_quantity(TestData.itemPriceForQuantity)
+                .quantity_unit(TestData.quantityUnit)
+                .build();
 
         //Verify item is created
         Response createResponse = itemAPI.createItem(itemToCreate);
@@ -95,17 +95,15 @@ public class ItemAPITests {
     @Tag("api")
     public void canDeleteSingleItem() {
 
-        //Obtain token
-        Credentials credentials = new Credentials(TestData.validUsername, TestData.validPassword, TestData.personalDomain);
-        String token = LoginAPI.obtainToken(credentials);
         ItemAPI itemAPI = new ItemAPI(token);
 
         //Create item
-        Item itemToCreate = new Item();
-        itemToCreate.name = TestData.itemName + LocalDateTime.now();
-        itemToCreate.price = TestData.itemPrice;
-        itemToCreate.price_for_quantity = TestData.itemPriceForQuantity;
-        itemToCreate.quantity_unit = TestData.quantityUnit;
+        Item itemToCreate = Item.builder()
+                .name(TestData.itemName + LocalDateTime.now())
+                .price(TestData.itemPrice)
+                .price_for_quantity(TestData.itemPriceForQuantity)
+                .quantity_unit(TestData.quantityUnit)
+                .build();
 
         //Verify item is created
         Response createResponse = itemAPI.createItem(itemToCreate);
@@ -124,17 +122,15 @@ public class ItemAPITests {
     @DisplayName("Can update single item")
     public void canUpdateSingleItem() {
 
-        //Obtain token
-        Credentials credentials = new Credentials(TestData.validUsername, TestData.validPassword, TestData.personalDomain);
-        String token = LoginAPI.obtainToken(credentials);
         ItemAPI itemAPI = new ItemAPI(token);
 
         //Create item
-        Item itemToCreate = new Item();
-        itemToCreate.name = TestData.itemName + LocalDateTime.now();
-        itemToCreate.price = TestData.itemPrice;
-        itemToCreate.price_for_quantity = TestData.itemPriceForQuantity;
-        itemToCreate.quantity_unit = TestData.quantityUnit;
+        Item itemToCreate = Item.builder()
+                .name(TestData.itemName + LocalDateTime.now())
+                .price(TestData.itemPrice)
+                .price_for_quantity(TestData.itemPriceForQuantity)
+                .quantity_unit(TestData.quantityUnit)
+                .build();
         Response createResp = itemAPI.createItem(itemToCreate);
 
         //Verify item is created
@@ -144,8 +140,8 @@ public class ItemAPITests {
         int id = createResp.then().extract().jsonPath().getInt("id");
 
         //Update item's price
-        double newPrice = itemToCreate.price + 1;
-        itemToCreate.price = newPrice;
+        double newPrice = itemToCreate.getPrice() + 1;
+        itemToCreate.setPrice(newPrice);
         Response updateResp = itemAPI.updateItem(id, itemToCreate);
 
         //Verify item is updated
@@ -155,7 +151,5 @@ public class ItemAPITests {
         Response getResp = itemAPI.getItem(id);
         double updatedItemPrice = getResp.path("price");
         Assertions.assertEquals(newPrice, updatedItemPrice);
-
-
     }
 }
