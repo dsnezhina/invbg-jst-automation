@@ -31,7 +31,7 @@ public class ItemAPITests {
         ItemAPI itemAPI = new ItemAPI(token);
 
         //Create item
-        Item itemToCreate = new Item(TestData.itemName + LocalDateTime.now(), TestData.itemPrice, TestData.itemPriceForQuantity, TestData.quantityUnit);
+        Item itemToCreate = new Item(TestData.itemName + LocalDateTime.now(), TestData.itemPrice, TestData.itemPriceForQuantity, TestData.itemQuantityUnit);
 
         //Check response status code
         Response createResponse = itemAPI.createItem(itemToCreate);
@@ -77,7 +77,7 @@ public class ItemAPITests {
                 .name(TestData.itemName + LocalDateTime.now())
                 .price(TestData.itemPrice)
                 .price_for_quantity(TestData.itemPriceForQuantity)
-                .quantity_unit(TestData.quantityUnit)
+                .quantity_unit(TestData.itemQuantityUnit)
                 .build();
 
         //Verify item is created
@@ -102,7 +102,7 @@ public class ItemAPITests {
                 .name(TestData.itemName + LocalDateTime.now())
                 .price(TestData.itemPrice)
                 .price_for_quantity(TestData.itemPriceForQuantity)
-                .quantity_unit(TestData.quantityUnit)
+                .quantity_unit(TestData.itemQuantityUnit)
                 .build();
 
         //Verify item is created
@@ -129,7 +129,7 @@ public class ItemAPITests {
                 .name(TestData.itemName + LocalDateTime.now())
                 .price(TestData.itemPrice)
                 .price_for_quantity(TestData.itemPriceForQuantity)
-                .quantity_unit(TestData.quantityUnit)
+                .quantity_unit(TestData.itemQuantityUnit)
                 .build();
         Response createResp = itemAPI.createItem(itemToCreate);
 
