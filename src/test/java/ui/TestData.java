@@ -4,9 +4,9 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 public class TestData {
     //Login
-    public static String personalDomain = ""; //Replace with your personal domain
-    public static String validUsername = ""; //Replace with your username
-    public static String validPassword = ""; //Replace with your password
+    public static String personalDomain = PersonalAccount.domain; //Replace with your personal domain
+    public static String validUsername = PersonalAccount.username; //Replace with your username
+    public static String validPassword = PersonalAccount.password; //Replace with your password
     public static String invalidUsername = "JamesSmith2023@gmail.com";
     public static String invalidPassword = "pass123";
 

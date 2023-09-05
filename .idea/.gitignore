@@ -1,3 +1,5 @@
+src/test/java/ui/PersonalAccount.java
+PersonalAccount.java
 # Default ignored files
 /shelf/
 /workspace.xml
@@ -8,8 +10,11 @@
 # Maven
 log/
 target/
+target
 
 # Intellij
 .idea
 *.iml
 *.iws
+
+
